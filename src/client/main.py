@@ -10,13 +10,13 @@ def __main__():
     room_name = input('Room name: ')
     ip_addr = input('Server Address: ')
     log_file = input('Log File (leave blank to disable logging): ')
-       # configure the logger
+    # configure the logger
     log_active = True
     if log_file.strip() == '':
         print('Logging disabled')
         log_active = False
     else:
-        logging.basicConfig(filename=log_file, filemode='a+', format='%(asctime)s: %(message)s')
+        logging.basicConfig(filename=log_file, format='%(asctime)s: %(message)s', force=True, level=logging.INFO)
     # configure the sensor
     sensor = None
     try:
@@ -41,12 +41,13 @@ def __main__():
                 notification.notify(title='Door Monitor', message=f'Sensor for {room_name} has been disabled', timeout=10)
                 if log_active:
                     logging.info(f'{room_name}: Sensor Disconnected')
-                sys.exit(0)
+                break
             case None:
                 notification.notify(title='Door Monitor', message=f'Sensor for {room_name} has failed', timeout=10)
                 if log_active:
                     logging.info(f'{room_name}: Sensor Failure')
-                sys.exit(1)
+                break
+    logging.shutdown()
 
 if __name__ == '__main__':
     __main__()
